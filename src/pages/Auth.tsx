@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, Eye, EyeOff, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,14 +13,11 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
   const passwordRule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     if (!isLogin && !passwordRule.test(password)) {
       toast({
@@ -30,7 +25,6 @@ const Auth = () => {
         description: "Use at least 6 characters with uppercase, lowercase, and number.",
         variant: "destructive",
       });
-      setLoading(false);
       return;
     }
 
@@ -40,42 +34,13 @@ const Auth = () => {
         description: "Please make sure both password fields are the same.",
         variant: "destructive",
       });
-      setLoading(false);
       return;
     }
 
-    try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-
-        toast({
-          title: "Login successful",
-          description: "Welcome back.",
-        });
-        navigate("/");
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin },
-        });
-        if (error) throw error;
-
-        toast({
-          title: "Account created",
-          description: "Please check your email to verify your account.",
-        });
-      }
-    } catch (error: any) {
-      toast({
-        title: "Authentication failed",
-        description: error?.message ?? "Unable to connect to authentication service.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+    toast({
+      title: "Authentication disabled",
+      description: "Supabase auth has been removed from this app.",
+    });
   };
 
   return (
@@ -186,8 +151,8 @@ const Auth = () => {
               </div>
             )}
 
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? "Please wait..." : isLogin ? "Sign In" : "Sign Up"}
+            <Button type="submit" className="w-full" size="lg">
+              {isLogin ? "Sign In" : "Sign Up"}
             </Button>
           </form>
 
