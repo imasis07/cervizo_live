@@ -28,7 +28,7 @@ const FinalCTASection = () => {
           <div className="flex flex-col sm:flex-row gap-4">
 
             {/* Primary Button */}
-            <button className="bg-[#2563eb] hover:bg-[#1d4ed8] 
+            <button className="bg-[#f97316] hover:opacity-95 
                                text-white px-6 py-3 
                                rounded-xl text-base font-semibold 
                                flex items-center gap-2 transition">
